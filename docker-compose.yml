@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: nodejs-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - JWT_SECRET=your_secret_key
+      - SQL_HOST=postgres
+      - SQL_PORT=5432
+      - SQL_USERNAME=postgres
+      - SQL_PASSWORD=postgres
+      - SQL_DATABASE_NAME=nodejs_api
+    depends_on:
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - ./uploads:/usr/src/app/uploads
+      - /usr/src/app/node_modules
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nodejs_api
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
